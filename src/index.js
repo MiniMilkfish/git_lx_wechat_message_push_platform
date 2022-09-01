@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import CCompMaster from './components/cComp/cCompMaster';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CCompMaster />
   </React.StrictMode>,
   document.getElementById('root')
 );

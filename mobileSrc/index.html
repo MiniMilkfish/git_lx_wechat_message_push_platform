@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="version" content="0.1.4" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <title>龙象环保微信公众号消息推送平台 | Wechat Message Push Platform</title>
+
+    <!-- Style -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+        rel="stylesheet" />
+
+    <!-- Javascript -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"
+        type="text/javascript"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+        type="text/javascript"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.14.0-beta2/js/i18n/defaults-zh_CN.min.js"
+        type="text/javascript"></script>
+
+    <style>
+        @font-face {
+            font-family: "pf";
+            src: url(./PingFang-SC-Semibold.otf);
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .title {
+            margin: 10px 0 20px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #333333;
+            font-family: 'pf';
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-family: 'pf';
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .form-control {
+            height: 44px;
+        }
+
+        .bootstrap-select>.dropdown-toggle {
+            border: 1px solid #ced4da;
+            height: 44px;
+            line-height: 30px;
+        }
+
+        #bindBtn {
+            height: 48px;
+            background: #1492FF;
+            color: #FFFFFF;
+        }
+
+        .dropdown-toggle::after {
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAJCAQAAACoRNXiAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfmAwMJJQS5k6hwAAAAjElEQVQY02M0nsCQxcDKgAl+M0xjNH7NIMKAHbxhlv7N4IFdjrGa+dkJaX4GSyxS/WcaGRkY/jOaLv0fiSa1/HQ0438mBgbG///jGfegSO1RTGD8z8DACOFa8/44wGAElTvH4XD0MwMDXJKBwUrs5zEGZQYGhrss1idfQk1AGGaszLj4PyNDzNm7MBEA60QkEf8iGvEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDMtMDNUMDk6Mzc6MDErMDA6MDDyjuENAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAzVDA5OjM3OjAxKzAwOjAwg9NZsQAAAABJRU5ErkJggg==") no-repeat;
+            display: inline-block;
+            margin-left: 0;
+            content: "";
+            border-top: 0;
+            border-right: 0;
+            border-bottom: 0;
+            border-left: 0;
+            color: #333333;
+            width: 16px;
+            height: 9px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-center">
+            <img src="data:image/png;base64,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"
+                class="rounded" alt="Logo">
+            <div class="title">绑定用户身份信息</div>
+        </div>
+        <form novalidate>
+            <div class="mb-3">
+                <label for="siteName_l" class="form-label">工地名称</label>
+                <input type="text" class="form-control" id="siteName_l" placeholder="请选择工地名称" style="display: none;">
+                <select class="selectpicker form-control show-tick" data-live-search="true" data-width="auto"
+                    id="siteName_v"></select>
+            </div>
+            <div class="mb-3">
+                <label for="mnCode" class="form-label">MN码</label>
+                <input type="text" class="form-control" id="mnCode" placeholder="请输入MN码" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="person" class="form-label">联系人</label>
+                <input type="text" class="form-control" id="person" placeholder="请输入工地联系人">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">联系电话</label>
+                <input type="number" class="form-control" id="phone" placeholder="请输入工地联系人电话号码"
+                    onkeyup="value=value.replace(/[^\d]/g,'')">
+            </div>
+            <div class="d-grid gap-2" style="margin-top: 66px;">
+                <button id="bindBtn" class="btn" type="button">绑定</button>
+            </div>
+        </form>
+
+        <!-- 消息提示 Modal -->
+        <div class="modal fade" id="notificationModal" aria-labelledby="notificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationModalLabel">绑定结果</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert" role="alert" id="notificationContainer"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">立即关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const SERVER_HOST = "http://wxapp.longxiang-ep.cn",
+            LOCALSTORAGE_K = {
+                openId: 'ABC',
+                state: 'DEF'
+            },
+            userBindDetailUrl = '/Users/BindInformation',                   // code获取绑定信息
+            siteListUrl = '/Device';                                        // 工地列表
+
+        let deviceListQueryInterval = null,
+            notificationModal = null,
+            iframeParams = {
+                code: '',
+                state: ''
+            },
+            ignoreReload = false,   // 无视页面刷新
+            userBinded = false,     // 用户是否绑定
+            siteList = [],          // 工地列表
+            userOpenId = '',        // 用户OpenId
+            state = '';             // 所属平台
+
+        $(function () {
+            // 工地列表查询
+            siteListQuery();
+
+            //取默认参数值
+            userOpenId = getItem(LOCALSTORAGE_K.openId),
+                state = getItem(LOCALSTORAGE_K.state);
+
+            if (userOpenId && state) {
+                userBindDetailQuery(userOpenId, state);
+            } else {
+                let lHref = window.location.href;
+                if (lHref.split("?")[1]) {
+                    lHref.split("?")[1].split('&').map(function (param) {
+                        let paramData = param.split("=");
+                        iframeParams[paramData[0]] = paramData[1];
+                        return true;
+                    });
+
+                    if (iframeParams.code) {
+                        userOpenIdInit(iframeParams.code, iframeParams.state);
+                        state = iframeParams.state;
+                    }
+                }
+            }
+
+            // 组件事件初始化
+            controlEventInit();
+        });
+
+        // 组件事件初始化
+        function controlEventInit() {
+            $("#bindBtn").click(function () {
+                let reqUrl = `${SERVER_HOST}/Users/${userOpenId}/infomation`,
+                    type = 'DELETE',
+                    reqParam = {},
+                    resTitle = "解绑";
+
+                if (!userBinded) {
+                    type = 'POST';
+                    reqParam = {
+                        mnCode: $(".container #mnCode").val().trim(),
+                        person: $(".container #person").val().trim(),
+                        phone: $(".container #phone").val().trim(),
+                    };
+                    resTitle = "绑定";
+
+                    if (reqParam.person.length === 0) {
+                        notificationModalToggle(NOTIFICATION_TYPE.FAIL, '请填写联系人', true);
+                        return;
+                    }
+                    if (reqParam.phone.length === 0) {
+                        notificationModalToggle(NOTIFICATION_TYPE.FAIL, '请填写联系方式', true);
+                        return;
+                    }
+
+                    if (!isPhoneNum(reqParam.phone)) {
+                        notificationModalToggle(NOTIFICATION_TYPE.FAIL, '请填写正确的联系方式', true);
+                        $('.container #phone').val('');
+                        return;
+                    }
+                }
+
+                if (!userOpenId) {
+                    notificationModalToggle(NOTIFICATION_TYPE.FAIL, resTitle + '失败, 因为没有有效的 openId!');
+                    return;
+                };
+
+                handleCommonAjaxRequest(reqUrl, type, reqParam, function (success, err) {
+                    if (err) return;
+
+                    success ? notificationModalToggle(NOTIFICATION_TYPE.SUCC, resTitle + '成功!') : notificationModalToggle(NOTIFICATION_TYPE.FAIL, resTitle + '失败,请重新' + resTitle);
+
+                });
+            });
+
+            // 通知弹窗实例初始化
+            notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'), { keyboard: false })
+            let myModalEl = document.getElementById('notificationModal')
+            myModalEl.addEventListener('hidden.bs.modal', function (event) {
+                if (!ignoreReload) window.location.reload();
+
+            });
+
+            $('#siteName_v').on('changed.bs.select', function (_e, clickedIndex) {
+                $(".container #mnCode").val(siteList[clickedIndex].mnCode);
+            });
+
+            $('.container #phone').on('input', function (event) {
+                $('.container #phone').val(event.target.value.slice(0, 11));
+            })
+
+        }
+
+        /**
+         * 联系电话验证
+        */
+        function isPhoneNum(str) {
+            return /^1[3|4|5|8|7]\d{9}$/.test(str)
+        }
+
+        /**
+         * 工地列表查询
+        */
+        function siteListQuery() {
+            handleCommonAjaxRequest(SERVER_HOST + siteListUrl, 'GET', {}, function (res, err) {
+                if (err) return;
+
+                if (res && res.datas && res.datas.length > 0) {
+                    siteList = [].concat(res.datas);
+
+                    // 工地列表组件追加项
+                    if ($("#siteName_v")[0] && $("#siteName_v")[0].options.length === 0) {
+                        siteList.map(function (item, index) {
+                            if (index === 0) $(".container #mnCode").val(item.mnCode);
+                            $("#siteName_v").append('<option data-tokens="' + item.mnCode + '">' + item.description + '</option>');
+                            return true;
+                        });
+                        $('#siteName_v').selectpicker('refresh');
+                    }
+                }
+            });
+        }
+
+        const NOTIFICATION_TYPE = {
+            SUCC: 'alert-success',
+            FAIL: 'alert-danger'
+        }
+        function notificationModalToggle(type, description, reloadFlag) {
+            ignoreReload = !!reloadFlag;
+            switch (type) {
+                case NOTIFICATION_TYPE.SUCC:
+                    $("#notificationContainer").removeClass(NOTIFICATION_TYPE.FAIL).addClass(NOTIFICATION_TYPE.SUCC);
+                    break;
+                case NOTIFICATION_TYPE.FAIL:
+                    $("#notificationContainer").removeClass(NOTIFICATION_TYPE.SUCC).addClass(NOTIFICATION_TYPE.FAIL);
+                    break;
+                default:
+                    $("#notificationContainer").removeClass(NOTIFICATION_TYPE.SUCC).addClass(NOTIFICATION_TYPE.FAIL);
+                    description = "未知错误";
+                    break;
+            }
+
+            $("#notificationContainer").text(description);
+            notificationModal.toggle();
+        }
+
+        /**
+         * 用户OpenId 初始化
+         * @parma {String} code
+         * @parma {String} state
+        */
+        function userOpenIdInit(code, state) {
+            handleCommonAjaxRequest(SERVER_HOST + userBindDetailUrl, 'GET', { code, state }, function (openId, err) {
+                if (err) {
+                    notificationModalToggle(NOTIFICATION_TYPE.FAIL, err.responseText || '未知错误~');
+                    return;
+                };
+
+                if (openId && isString(openId)) {
+                    userOpenId = openId;
+
+                    // 缓存信息 openId && state
+                    setItem(LOCALSTORAGE_K.openId, openId);
+                    setItem(LOCALSTORAGE_K.state, state);
+
+                    // 用户绑定信息查询
+                    userBindDetailQuery(openId, state);
+                } else {
+                    notificationModalToggle(NOTIFICATION_TYPE.FAIL, String(openId));
+                }
+            });
+        }
+
+        /**
+         * 用户绑定信息查询
+         * @param {String} openId
+         * @param {String} state
+        */
+        function userBindDetailQuery(openId, state) {
+            handleCommonAjaxRequest(`${SERVER_HOST}/Users/${openId}/BindInformation`, 'GET', { state }, function (res, _err) {
+                if (_err) {
+                    notificationModalToggle(NOTIFICATION_TYPE.FAIL, _err.responseText || '未知错误~');
+                    return;
+                }
+
+                if (res && Object.keys(res).length > 0) {
+                    // 已绑定 => 解绑
+                    userBinded = true;
+                    $("#bindBtn").text("解绑");
+                    $("#siteName_l").show();
+                    $("#siteName_v").selectpicker('hide');
+                    setFormDataFromRes(res);
+                    setFormControlDisabled(true);
+                } else {
+                    // 未绑定
+                    userBinded = false;
+                    $("#bindBtn").text("绑定");
+                    $("#siteName_l").hide();
+                    $("#siteName_v").selectpicker('show');
+                }
+            })
+        }
+
+        /**
+         * 给组件赋值
+         * @param {Object} data
+        */
+        function setFormDataFromRes(data) {
+            deviceListQueryInterval = setInterval(() => {
+                if (siteList && siteList.length > 0) {
+                    clearInterval(deviceListQueryInterval);
+                    deviceListQueryInterval = null;
+
+                    let matched = siteList.filter(item => item.mnCode === data.mnCode),
+                        siteName = '';
+                    if (matched && matched.length > 0) siteName = matched[0].description;
+
+                    $(".container #siteName_l").val(siteName);
+                    $(".container #mnCode").val(data.mnCode);
+                    $(".container #person").val(data.person);
+                    $(".container #phone").val(data.phone);
+                }
+            }, 100);
+        }
+
+        /**
+         * 设置组件是否可用
+         * @param {Boolean} status 是否禁用
+        */
+        function setFormControlDisabled(status) {
+            $(".container #siteName_l").attr("disabled", status);
+            $(".container #person").attr("disabled", status);
+            $(".container #phone").attr("disabled", status);
+        }
+
+
+        const MIME_TYPE = {
+            JSON: "application/json",
+            FORM: "multipart/form-data"
+        };
+        /**
+         * 处理通用Ajax 异步请求
+         *      - 仅处理GET 请求或表单的POST请求
+         * @param {String} url 
+         * @param {String} method 'GET' || 'POST'
+         * @param {Object} params - 请求体内容 键值对象或FormData
+         * @param {Funtion} cb 
+         * @param {String} [mt="Application/json"] 请求的Mime-Type 类型
+         */
+        function handleCommonAjaxRequest(url, method, params, cb, mt) {
+            method = method == void 0 ? 'get' : method;
+            params = params == void 0 ? {} : params;
+            mt = mt === void 0 ? MIME_TYPE.FORM : mt;
+
+            let options = {
+                url: url,
+                method: method.toLowerCase(),
+                headers: {
+                    "Accept": MIME_TYPE.JSON
+                },
+                timeout: 5 * 60 * 1000,
+                mode: "cors",
+                async: true,       //修改为同步,解决频繁刷新请求500 的问题【该修改不被推荐】
+                crossDomain: true
+            };
+
+            if (method.toLowerCase() === 'get') {
+                options.url = combineQueryUrl(url, params, true);
+            } else {
+                options.mimeType = mt;
+                switch (mt) {
+                    case MIME_TYPE.FORM:
+                        if (params instanceof FormData) {
+                            options.processData = false;
+                            options.contentType = false;
+                            options.data = params;
+                        } else {
+                            if (Object.keys(params).length > 0) {
+                                var form = new FormData();
+                                Object.keys(params).map(function (key) {
+                                    if (params[key] instanceof FileList) {
+                                        for (let i = 0; i < params[key].length; i++) {
+                                            form.append(key, params[key][i]);
+                                        }
+                                    } else {
+                                        form.append(key, params[key]);
+                                    }
+                                });
+                                options.processData = false;
+                                options.contentType = false;
+                                options.data = form;
+                            }
+                        }
+                        break;
+                    case MIME_TYPE.JSON:
+                        options.headers["Content-Type"] = mt;
+                        options.data = JSON.stringify(params);
+                        break;
+                }
+            }
+
+            $.ajax(options).then(function (data, _message, response) {
+                result = {};
+
+                if (data) {
+                    cb(data, null);
+                } else {
+                    cb(null, data);
+                }
+            }).catch(function (err) {
+                cb(null, err);
+                return true;
+            });
+        }
+
+        /**
+         * 合并GET请求字符串
+         * @param {String} url 服务路径
+         * @param {Object} params
+         * @param {Boolean} encode 是否对字符Urlencode 编码
+         */
+        function combineQueryUrl(url, params, encode) {
+            encode = encode == void 0 ? true : encode;
+
+            let parts = [];
+            for (let i in params) {
+                if (params.hasOwnProperty(i)) {
+                    encode ?
+                        parts.push(encodeURIComponent(i) + "=" + encodeURIComponent(params[i]))
+                        :
+                        parts.push(i + "=" + params[i]);
+                }
+            }
+            if (parts.length === 0) return url;
+
+            return url + (url.indexOf('?') > -1 ? "&" : "?") + parts.join("&");
+        }
+
+        /**
+         * set localStorage
+         * @param {String} key [key]
+         * @param {String} val [value]
+         */
+        function setItem(key, val) {
+            val = val.toString();
+            if (typeof (window.Storage) !== 'undefined') {
+                localStorage.setItem(key, val);
+            }
+            else {
+                setCookie(key, val);
+            }
+        }
+
+        /**
+         * get localStorage
+         * @param  {String} key [key]
+         * @return {String}     [value]
+         */
+        function getItem(key) {
+            if (typeof (window.Storage) !== 'undefined') {
+                return localStorage.getItem(key);
+            }
+            else {
+                return getCookie(key);
+            }
+        }
+
+        /**
+         * set cookie
+         * @param {String} key    
+         * @param {String} val    
+         * @param {String} [days] 
+         * @param {String} [path] 
+         * @param {String} [domain]
+         */
+        function setCookie(key, val, days, path, domain) {
+            var expire = new Date();
+            expire.setTime(expire.getTime() + (days ? 3600000 * 24 * days : 30 * 24 * 60 * 60 * 1000)); // 默认1个月
+            document.cookie = key + '=' + encodeURIComponent(val.toString()) + ';expires=' + expire.toGMTString() + ';path=' +
+                (path ? path : '/') + ';' + (domain ? ('domain=' + domain + ';') : '');
+        }
+
+        /**
+         * get cookie
+         * @param  {[type]} key [key]
+         * @return {String}     [cookie value]
+         */
+        function getCookie(key) {
+            var r = new RegExp("(?:^|;+|\\s+)" + key + "=([^;]*)");
+            var m = window.document.cookie.match(r);
+            return (!m ? "" : m[1]) || null;
+        }
+
+        /**
+         * 该部分为JS数据类型的校验
+         */
+        function isType(type, obj) {
+            return Object.prototype.toString.call(obj) === '[object ' + type + ']';
+        }
+
+        function isString(obj) {
+            return isType('String', obj);
+        }
+    </script>
+</body>
+
+</html>
